@@ -1,0 +1,120 @@
+************************************************Iniciando no ERACT ************************************************
+===> Componentes
+Um componente, é sempre uma função, que chama um nome (esse nome tem sempre sua primeira letra maiucula, "isso 
+é um costume), e essa função devolve um html. E um componente apenas por arquivo, nunca mais que um componente no mesmo 
+arquivo (isso é uma convenção).
+
+export function App(){
+    return <h1>Hello Papito!</h1>
+}
+
+Sempre que eu for usar o JavaScript dentro do Html, eu tenho que colocar a chamada/comando entre chaves 
+
+===> Propriedades
+As propriedades funcionam assim como atributos funciona dentro do html, são informações variaveis que eu posso passar 
+para um elemento funcionar de forma diferente. Por exempo <a href=""></> o "href" é qual endereço eu irei colocar na 
+ancora para quando eu clicar eu ser redirecionado. Eu estou mudando o comportamento da ancora baseado numa informação que 
+eu estou passando para ela. 
+<ul>
+    <RepositoryItem/>   | Temos em um arquivo a section onde se encontra essa <ul> e a <li> esta em outro arquivo 
+    <RepositoryItem/>   | o arquivo RepositoryItem, que nesse caso está sendo chamado dentro da <ul> para ser 
+    <RepositoryItem/>   | executado.
+    <RepositoryItem/>   |
+</ul>     
+Na maioria das vezes onde temos em nossa aplicação algo que se repete muito ao longo do tempo, e vatojoso, criar um 
+componente para encapsular aquilo.
+
+O conseito de propriedade que dizer que eu posso enviar uma informação do componete pai para o componente filho
+nesse caso o componente pai seria o "RepositoryList" e o componente filho "RepositoryItem".
+
+***RepositoryList***
+import { RepositoryItem } from "./RepositoryItem";
+export function RepositoryList(){
+    return(
+        <section className="repository-list">
+            <h1>Lista de Repostórios</h1>
+            <ul>
+                <RepositoryItem repository="Unform2"/>
+                <RepositoryItem/>
+                <RepositoryItem/>
+                <RepositoryItem/>
+            </ul>
+        </section>
+    )
+}
+***RepositoryItem***
+export function RepositoryItem(props){ //props o Reacrt coloca todos os argumentos dentro dessa propriedade chamada props
+    return(
+        <li>
+            <strong>{props.repository ?? 'Default'}</strong>
+            <p>Forms in React</p>
+            <a href="">Acessar repositório</a>
+        </li>
+    );
+}
+
+Repare que na 'RepositoryList' eu digo o título/nome atravez de 'repository="Unform2"' e lá em 'RepositoryItem'
+atravez de props.repository (props o Reacrt coloca todos os argumentos dentro dessa propriedade chamada props)
+eu executo para o nome seja colocado. 
+
+===> Estado
+É uma forma de eu ter variaveis, que quando elas forem alteradas na minha aplicação, vão refletir nas alterações da 
+interface
+
+import { useState } from 'react';
+
+export function Counter (){
+    const [counter, setCounter] = useState(0)
+
+    function increment(){
+        setCounter(counter + 1)
+    }
+
+    return(
+        <div>
+            <h2>{counter}</h2>
+            <button type="button" onClick={increment} >Increment</button>
+        </div>
+    )
+}
+
+===> imutabilidade 
+Preve que um variavel nunca vai poder alterar diretamente o conteudo daquela variavel, mas sim precisamos dar um novo var 
+para aquela variavel.
+Nesse caso aqui a baixop eu tenho um array "usuarios", com uma quantidade de nomes dentro dele, mais eu quero adicionar 
+mais nomes. 
+
+usuarios = ['diego', 'rafael', 'danilo'] ---> Informação que já esta salva na memoria (componete imutavel)
+
+novoUsuario = [...usuarios, 'papito'] ---> Informação que acaba de ser criada na memoria e acrescentada na infomação 
+                                            antiga, sem modificar a mesma.
+
+Esse é o conseito de imutabilidade, eu sempre crio um novo espaço na memoria, contendo a minha nova informação. Do que 
+alterar uma informação que já está salva na memoria. 
+
+===+> useEffect = Serve basicamente, para dispararmos uma função quando algo acontesser na minha apliacação. O que é
+esse acontecer? Pode ser por exemplo uma variavel mudou, se essa variavel mudou eu quero avisar alguma API que ouve essa
+alteração, ou eu quero que algo acontessa perante isso. useState e useEffect serão os hoot que mais serão utilizados
+por nos, nas nossas aplicações.
+Por padrão o useEffect tem dois paramentros 
+useEffect(() => {}, []); {}=padrão 1 e []=padrão 2
+Nunca esqueça de colocar o segundo padrão, que é [], por que se não ele vai entrar em loop. 
+Sempre certifique-se que o primeiro padrão está correto, porque se ele estiver errado, e mando o erro para o segundo 
+padrão e entra também em loop. 
+
+===> key
+Toda vez que eu faço um .map, dentro do html da minha aplicação .jsx, eu preciso informar para o React, atravez de uma
+propriedade que o proprio React cria, chamada: key. Essa propriedade key é uma propriendade propria do React, que ajuda
+ele a se localizar coso o nosso array de repositories mude, a ele se localizar qual repositoryItem ele precisa retirar 
+da tela, qual ele precisa deichar, qual ele precia alterar e por ae vai. Então smepre que utilizarmos um .map, precisamos
+colocar no primeiro item que vem dentro do map, peimiro elemento/componente dentro do .map a propriedade key. Somente no 
+primeiro.
+<section className="repository-list">
+    <h1>Lista de Repositório</h1>
+    <ul>
+        {repositories.map(repository => {
+            return <RepositoryItem key={repository.name} repository={repository}/>
+        })}
+    </ul>
+</section>
+
